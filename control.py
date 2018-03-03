@@ -23,7 +23,7 @@ def setFan(temp, target):
 # Get steady state reading of the smokebox temp
 def readTemp():
 	
-    conn=sqlite3.connect('/home/pi/templog.db')
+    conn=sqlite3.connect('/home/pi/Smoker-Controller/templog.db')
     curs=conn.cursor()
     #curs.execute("INSERT INTO temps (sensnum,temp) values((?), (?))", (sensnum,temp,))
     curs.execute("SELECT max(timestamp), sensnum, temp FROM (SELECT * FROM temps WHERE sensnum = 0)")

@@ -4,7 +4,7 @@
 case "$1" in 
     start)
         echo "Starting thermserv"
-        cd /home/pi/web;sudo node thermserv &
+        cd /home/pi/Smoker-Controller/web;sudo node thermserv &
         ;;
     stop)
         echo "Stopping thermserv"
