@@ -86,7 +86,7 @@
 			series: [{name: 'Smoker',
 				data: []},
 				{ name: 'Meat',
-				data: []
+					data: []
 			}]
 			});        
 		});
@@ -124,6 +124,20 @@
 			});
 
 			
+			function getSetNow()
+			{
+				$.getJSON('./temperature_now.json?num_sens=1', function(data) {
+					var output="";
+					output+= "<br>Setpoint<br>" + document.getElementById("sensorset").value  + String.fromCharCode(176) + "F<br><br>";
+					document.getElementById("sensorset").innerHTML=output;
+				});
+			}
+			$(document).ready(function () {
+				var run = getSetNow();
+			setInterval(function() {
+				var run = getSetNow();
+			}, 60000);
+			});
 			//disables fields that user should not be able to edit after enabling DHCP
 			function disableIP()
 			{
