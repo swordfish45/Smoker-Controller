@@ -340,16 +340,6 @@ var server = http.createServer(
 		);
         response.end();
         
-        //reboot if changes were made
-        if ((POST.dhcp) || (POST.ip && POST.netmask && POST.gateway) || (POST.dns1) || (POST.ssid && POST.psk) || (POST.adhoc) ) {
-        	var exec = require('child_process').exec;
-			function execute(command, callback){
-    			exec(command, function(error, stdout, stderr){ callback(stdout); });
-			}
-			execute('reboot -n', function(callback){
-    			console.log(callback);
-			});
-        }
     	});
     	}
 		
