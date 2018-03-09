@@ -127,9 +127,9 @@
 
 			function getSetNow()
 			{
-				$.getJSON('./temperature_now.json?num_sens=1', function(data) {
+				$.getJSON('./configs.json', function(data) {
 					var output="";
-					output+= "<br>Setpoint<br>" + document.getElementById("sensorset").value  + String.fromCharCode(176) + "F<br><br>";
+					output+= "<br>Setpoint<br>" + data.sensorset  + String.fromCharCode(176) + "F<br><br>";
 					document.getElementById("sensorset").innerHTML=output;
 				});
 			}
