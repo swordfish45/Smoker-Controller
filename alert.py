@@ -31,7 +31,7 @@ def sendmail(fromaddr, toaddr, username, password, email_body, email_subject, sm
 		print e
 
 def get_temperature (sensnum):
-	con=sqlite3.connect('/home/pi/templog.db')
+	con=sqlite3.connect('/home/pi/Smoker-Controller/templog.db')
 	cur = con.cursor()
 	cur.execute("SELECT (MAX(timestamp)*1000) as timestamp, sensnum, temp from temps where sensnum = ?", (sensnum,))
 	Timestamp, Sensor, Temperature = cur.fetchone()
@@ -54,12 +54,12 @@ def ConfigSectionMap(section):
 
 #grab all of the alert config variables for later use
 Config = ConfigParser.ConfigParser()
-Config.read("/home/pi/alerts.cfg")
+Config.read("/home/pi/Smoker-Controller/alerts.cfg")
 Email= ConfigSectionMap("Config")['email']
 
 #read holddown tracking file
-open('/home/pi/alerthold.txt', 'a').close()
-with open('/home/pi/alerthold.txt') as f:
+open('/home/pi/Smoker-Controller/alerthold.txt', 'a').close()
+with open('/home/pi/Smoker-Controller/alerthold.txt') as f:
     holddown = f.readlines()
 f.close()
 # preinitiailize holddown list if the file was empty
@@ -113,7 +113,7 @@ for sensor in xrange(0,3):
 			count += 1
 
 #write holddown counts to a file
-with open('/home/pi/alerthold.txt', 'w+') as f:
+with open('/home/pi/Smoker-Controller/alerthold.txt', 'w+') as f:
 	for item in holddown:
 		f.write("%s\n" % item)
 f.close()
@@ -122,7 +122,7 @@ f.close()
 #send email if there is a msg to send
 if msg != '':
 	Config = ConfigParser.ConfigParser()
-	Config.read("/home/pi/email.cfg")
+	Config.read("/home/pi/Smoker-Controller/email.cfg")
 	msgSubject = 'BBQ Monitor Alert'
 	sendmail(ConfigSectionMap("Config")['smtpemail'], Email, ConfigSectionMap("Config")['smtpuser'], ConfigSectionMap("Config")['smtppass'], 
 		msg, msgSubject,smtpsrv= ConfigSectionMap("Config")['smtpsrv'], smtpport= ConfigSectionMap("Config")['smtpport'])

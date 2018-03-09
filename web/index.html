@@ -86,8 +86,6 @@
 			series: [{name: 'Smoker',
 				data: []},
 				{ name: 'Meat',
-				data: []},
-				{ name: 'Sensor 3',
 				data: []
 			}]
 			});        
@@ -100,7 +98,6 @@
 				$.getJSON('./temperature_now.json?num_sens=0', function(data) {
 					var output="";
 					output+= "<br>Smoker<br>" + data.temperature_record[0].temp + String.fromCharCode(176) + "F<br><br>";
-					//output+= "<br>Sensor 1<br>" + '76' + String.fromCharCode(176) + "F<br><br>";
 					document.getElementById("sensor1temp").innerHTML=output;
 				});
 			}
@@ -116,7 +113,6 @@
 				$.getJSON('./temperature_now.json?num_sens=1', function(data) {
 					var output="";
 					output+= "<br>Meat<br>" + data.temperature_record[0].temp + String.fromCharCode(176) + "F<br><br>";
-					//output+= "<br>Sensor 2<br>" + '76' + String.fromCharCode(176) + "F<br><br>";
 					document.getElementById("sensor2temp").innerHTML=output;
 				});
 			}
@@ -127,21 +123,6 @@
 			}, 60000);
 			});
 
-			function getTemp3Now()
-			{
-				$.getJSON('./temperature_now.json?num_sens=2', function(data) {
-					var output="";
-					output+= "<br>Sensor 3<br>" + data.temperature_record[0].temp + String.fromCharCode(176) + "F<br><br>";
-					//output+= "<br>Sensor 3<br>" + '76' + String.fromCharCode(176) + "F<br><br>";
-					document.getElementById("sensor3temp").innerHTML=output;
-				});
-			}
-			$(document).ready(function () {
-				var run = getTemp3Now();
-			setInterval(function() {
-				var run = getTemp3Now();
-			}, 60000);
-			});
 			
 			//disables fields that user should not be able to edit after enabling DHCP
 			function disableIP()
@@ -295,7 +276,7 @@
 							<li><a href="#tab2" data-toggle="tab">Wireless Settings</a></li>
 							<li><a href="#tab3" data-toggle="tab">Sensor Alerts</a></li>
 							<li><a href="#tab4" data-toggle="tab">Email Configuration</a></li>
-							<li><a href="#tab5" data-toggle="tab">Sensor Settings</a></li>
+							<li><a href="#tab5" data-toggle="tab">Control Settings</a></li>
 						</ul>
 						<div class="tab-content">
 							<div class="tab-pane active" id="tab1">
@@ -458,9 +439,9 @@
 							</div>		
 							<div class="tab-pane active" id="tab5">
 								<div class="control-group">
-									<label class="control-label" for="sensor3enable">Sensor 3 Enable</label>
+									<label class="control-label" for="sensorset">Temp Set F</label>
 									<div class="controls">
-										<input type="checkbox" name="sensor3enable" id="sensor3enable" onclick="disableS3()">
+										<input type="text" name="sensorset" id="sensorset">
 									</div>
 								</div>
 						</div>	

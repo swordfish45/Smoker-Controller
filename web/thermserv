@@ -23,7 +23,7 @@ var nodestatic = require('node-static');
 var staticServer = new nodestatic.Server(".");
 
 // Setup database connection for logging
-var db = new sqlite3.Database('/home/pi/templog.db');
+var db = new sqlite3.Database('/home/pi/Smoker-Controller/templog.db');
 
 // Get temperature records from database
 function selectTemp(num_sens, num_records, callback){
@@ -236,8 +236,8 @@ var server = http.createServer(
   			alert += 's2_low_alert: ' + POST.s2low + "\n"
   			alert += 's3_high_alert: ' + POST.s3high + "\n"
   			alert += 's3_low_alert: ' + POST.s3low + "\n"
-  			fs.unlink('/home/pi/alerts.cfg');
-  			fs.writeFile('/home/pi/alerts.cfg', alert, 'utf8', function (err) {
+  			fs.unlink('/home/pi/Smoker-Controller/alerts.cfg');
+  			fs.writeFile('/home/pi/Smoker-Controller/alerts.cfg', alert, 'utf8', function (err) {
      			if (err) return console.log(err);
 			});
 		}
@@ -250,8 +250,8 @@ var server = http.createServer(
   			emailcfg += 'smtpport: ' + POST.smtpport + "\n"
   			emailcfg += 'smtpuser: ' + POST.smtpuser + "\n"
   			emailcfg += 'smtppass: ' + POST.smtppass + "\n"
-  			fs.unlink('/home/pi/email.cfg');
-  			fs.writeFile('/home/pi/email.cfg', emailcfg, 'utf8', function (err) {
+  			fs.unlink('/home/pi/Smoker-Controller/email.cfg');
+  			fs.writeFile('/home/pi/Smoker-Controller/email.cfg', emailcfg, 'utf8', function (err) {
      			if (err) return console.log(err);
 			});
 		}
@@ -340,16 +340,6 @@ var server = http.createServer(
 		);
         response.end();
         
-        //reboot if changes were made
-        if ((POST.dhcp) || (POST.ip && POST.netmask && POST.gateway) || (POST.dns1) || (POST.ssid && POST.psk) || (POST.adhoc) ) {
-        	var exec = require('child_process').exec;
-			function execute(command, callback){
-    			exec(command, function(error, stdout, stderr){ callback(stdout); });
-			}
-			execute('reboot -n', function(callback){
-    			console.log(callback);
-			});
-        }
     	});
     	}
 		

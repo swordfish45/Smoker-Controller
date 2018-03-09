@@ -83,7 +83,7 @@ def temp_calc(value):
     
 def log_temperature(sensnum,temp):
 
-    conn=sqlite3.connect('/home/pi/templog.db')
+    conn=sqlite3.connect('/home/pi/Smoker-Controller/templog.db')
     curs=conn.cursor()
     curs.execute("INSERT INTO temps (sensnum,temp) values((?), (?))", (sensnum,temp,))
 
