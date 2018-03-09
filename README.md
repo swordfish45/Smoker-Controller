@@ -1,4 +1,5 @@
 # Smoker-Controller
+#this is a conflict
 
 Charcoal smoker temperatrue controller. Monitor code and webgui based of Tim Wilhoit's project.
 
