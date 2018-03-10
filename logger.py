@@ -5,9 +5,10 @@ import os
 import RPi.GPIO as GPIO
 import math
 import sqlite3
+import statistics
 
 GPIO.setmode(GPIO.BCM)
-DEBUG = 0
+DEBUG = 1
 
 # read SPI data from MCP3008 chip, 8 possible adc's (0 thru 7)
 def readadc(adcnum, clockpin, mosipin, misopin, cspin):
@@ -108,19 +109,28 @@ GPIO.setup(SPICLK, GPIO.OUT)
 GPIO.setup(SPICS, GPIO.OUT)
 
 for sensor in xrange(0,3):
+                samples = []
 		value = 0
 		temp = 0 
-		value = readadc(sensor, SPICLK, SPIMOSI, SPIMISO, SPICS)
-		if value != 0:
-			temp = temp_calc(value)
-			temp = int(temp)
-			if DEBUG:
-				print "value:", value, sensor
-			log_temperature(sensor, temp)
-		#log temperature of 0 if sensor is not connected
-		if value == 0:
-			if DEBUG:
-				print "value:", value, sensor
-			log_temperature(sensor, 0)
+                for x in range(5):
+                    value = readadc(sensor, SPICLK, SPIMOSI, SPIMISO, SPICS)
+                    time.sleep(0.2)
+                    if value != 0:
+                        samples.append(int(temp_calc(value)))
+                std=99
+                print "samples:", samples
+                if len(samples) == 5:
+                    mean = statistics.mean(samples)
+
+                    std=statistics.stdev(samples)
+                
+                if std < 2.0:    
+                    if DEBUG:
+		        print "mean:", mean, sensor
+		    log_temperature(sensor, mean)
+                else:
+                    if DEBUG:
+                        print "invalid. L,std,sensor,samples:",len(samples), std, sensor, samples
+		    log_temperature(sensor, 0)
 
 GPIO.cleanup()
