@@ -13,25 +13,27 @@ DEBUG = 1
 #targettemp = 240
 PWMPIN = 13
 
+path='/home/pi/Smoker-Controller'
+
 def readSetPoint():
-    str = open('web/formdata','r').read()
+    str = open(path+'/web/formdata','r').read()
     match = re.search('\"sensorset\":\"(\d+)',str)
-    return match.group(1)
+    return int(match.group(1))
 
 # Set PWM of fan output port based on current steady state and target temp F
 def setFan(temp, target):
     if (DEBUG == 1):
         print temp, target
     if (temp < target):
-	GPIO.output(PWMPIN, True)
+        GPIO.output(PWMPIN, True)
     else:
-	GPIO.output(PWMPIN, False)
+        GPIO.output(PWMPIN, False)
 
 
 # Get steady state reading of the smokebox temp
 def readTemp():
 	
-    conn=sqlite3.connect('/home/pi/Smoker-Controller/templog.db')
+    conn=sqlite3.connect(path+'/templog.db')
     curs=conn.cursor()
     curs.execute("SELECT max(timestamp), sensnum, temp FROM (SELECT * FROM temps WHERE sensnum = 0)")
     temp = curs.fetchone()[2]
@@ -52,4 +54,4 @@ def testloop():
 GPIO.setup(PWMPIN,GPIO.OUT)
 #testloop()
 readTemp()
-GPIO.cleanup()
+#GPIO.cleanup()
