@@ -1,5 +1,7 @@
 #!/bin/bash
 #
 # 
-sudo sqlite3 /home/pi/Smoker-Controller/templog.db 'DROP TABLE temps;'
-sudo sqlite3 /home/pi/Smoker-Controller/templog.db 'CREATE TABLE temps(timestamp timestamp default (strftime('%s', 'now')), sensnum numeric, temp numeric);' 
+sqlite3 /home/pi/Smoker-Controller/templog.db  << 'END_SQL'
+DROP TABLE temps;
+CREATE TABLE temps(timestamp timestamp default (strftime('%s', 'now')), sensnum numeric, temp numeric);
+END_SQL
