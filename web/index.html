@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html>
 	<head>
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
 		<title>BBQ Temperature Monitor</title>
 	   	<meta name="viewport" content="width=device-width, initial-scale=1">
 	   	<meta name="version" content="0.1">
@@ -19,7 +26,7 @@
 				if (!firstrun) { //only plot last hours of data the first time
 					firstrun = true;
 				
-					for (s = 0; s < 3; s++) {
+					for (s = 0; s < 2; s++) {
 					$.getJSON('./temperature_query.json?num_sens='+s, function(data){
 						// Create the series
 						var series  = chart.series[data.temperature_record[0].sensnum],
@@ -29,7 +36,7 @@
 					}
 				}
 
-				for (s = 0; s < 3; s++) {
+				for (s = 0; s < 2; s++) {
 				$.getJSON('./temperature_now.json?num_sens='+s, function(data) {
 					//alert(data.temperature_record[0].sensnum);
 					var series  = chart.series[data.temperature_record[0].sensnum],
@@ -47,7 +54,7 @@
 
 		   Highcharts.setOptions({
 			global: {
-				timezoneOffset: 5 * 60
+				timezoneOffset: 4 * 60
 			}
 		});
 	   
