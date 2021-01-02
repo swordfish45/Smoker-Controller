@@ -2,6 +2,7 @@
 
 import RPi.GPIO as GPIO
 import time
+import sys
  
 ERROR_OFFSET = 0.5
 SERVO_MIN_DUTY = 2.5 + ERROR_OFFSET # duty cycle for 0 degrees
@@ -51,8 +52,18 @@ def destroy():
     GPIO.cleanup()
      
 if __name__ == '__main__':
+    if (not (len(sys.argv) == 2 and int(sys.argv[1]) >= 0 and int(sys.argv[1]) <= 100)):
+        print("Must provide integer percent closed 0-100")
+        exit()
     setup()
-    try:
-        loop()
-    except KeyboardInterrupt: # exit when Ctrl + C is pressed
-        destroy()
+    
+    angle = int(float(sys.argv[1]) * 0.01 * 180)
+    print(angle)
+    
+    # Silently ignored if above some angle for some reason
+    if(angle > 170):
+        angle = 170
+        
+    servoWrite(angle)
+    time.sleep(1)
+    destroy()
