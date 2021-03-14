@@ -6,6 +6,7 @@ import RPi.GPIO as GPIO
 import math
 import sqlite3
 import re
+import set_shutter
 
 GPIO.setmode(GPIO.BCM)
 DEBUG = 1
@@ -14,6 +15,13 @@ DEBUG = 1
 PWMPIN = 13
 
 path='/home/pi/Smoker-Controller'
+
+def readAperture():
+    str = open(path+'/web/formdata','r').read()
+    match = re.search('\"apertureset\":\"(\d+)',str)
+    if (DEBUG == 1):
+        print int(match.group(1))
+    return int(match.group(1))
 
 def readSetPoint():
     str = open(path+'/web/formdata','r').read()
@@ -42,7 +50,7 @@ def readTemp():
 
     conn.close()
     setFan(temp,readSetPoint())
-
+    set_shutter.setAperture(readAperture())
 def testloop():
 	while True:
 		readTemp()
@@ -54,4 +62,5 @@ def testloop():
 GPIO.setup(PWMPIN,GPIO.OUT)
 #testloop()
 readTemp()
+readAperture()
 #GPIO.cleanup()

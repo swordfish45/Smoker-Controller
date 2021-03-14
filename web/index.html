@@ -146,6 +146,22 @@
 				var run = getSetNow();
 			}, 60000);
 			});
+            
+            
+            function getAperture()
+			{
+				$.getJSON('./configs.json', function(data) {
+					var output="";
+					output+= "<br>Aperture<br>" + data.apertureset  + "&#37; Closed<br><br>";
+					document.getElementById("apertureset").innerHTML=output;
+				});
+			}
+			$(document).ready(function () {
+				var run = getAperture();
+			setInterval(function() {
+				var run = getAperture();
+			}, 60000);
+			});
 			//disables fields that user should not be able to edit after enabling DHCP
 			function disableIP()
 			{
@@ -259,9 +275,16 @@
 		<!-- Real-time Temp Buttons -->
 		<div class="row">
 		<h4>
-				<div class="col-md-4 col-xs-4" id="sensor1temp" style="background-color: #7cb5ec; border-radius: 35px; text-align:center; font: arial; color: #ffffff;"></div>
-				<div class="col-md-4 col-xs-4" id="sensor2temp" style="background-color: #434348; border-radius: 40px; text-align:center; font: arial; color: #ffffff;"></div>
-				<div class="col-md-4 col-xs-4" id="sensorset" style="background-color: #90ed7d; border-radius: 40px; text-align:center; font: arial; color: #ffffff;"></div>
+				<div class="col-md-6 col-xs-6" id="sensor1temp" style="background-color: #7cb5ec; border-radius: 35px; text-align:center; font: arial; color: #ffffff;"></div>
+				<div class="col-md-6 col-xs-6" id="sensor2temp" style="background-color: #434348; border-radius: 40px; text-align:center; font: arial; color: #ffffff;"></div>
+		
+		</h4>
+		</div>
+        <div class="row">
+		<h4>
+				<div class="col-md-6 col-xs-6" id="sensorset" style="background-color: #90ed7d; border-radius: 40px; text-align:center; font: arial; color: #ffffff;"></div>
+                <div class="col-md-6 col-xs-6" id="apertureset" style="background-color: #c97900; border-radius: 40px; text-align:center; font: arial; color: #ffffff;"></div>
+
 		</h4>
 		</div>
 		<br>
@@ -463,7 +486,13 @@
 								<div class="control-group">
 									<label class="control-label" for="sensorset">Temp Set F</label>
 									<div class="controls">
-										<input type="text" name="sensorset" id="sensorset">
+										<input type="text" name="sensorset" value="225" id="sensorset">
+									</div>
+								</div>
+                                <div class="control-group">
+									<label class="control-label" for="apertureset">Aperture 0-100% Closed</label>
+									<div class="controls">
+										<input type="text" name="apertureset" value="100" id="apertureset">
 									</div>
 								</div>
 						</div>	
