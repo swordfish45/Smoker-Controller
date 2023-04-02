@@ -152,7 +152,7 @@
 			{
 				$.getJSON('./configs.json', function(data) {
 					var output="";
-					output+= "<br>Aperture<br>" + data.apertureset  + "&#37; Closed<br><br>";
+					output+= "<br>Choke<br>" + data.apertureset  + "&#37; Closed<br><br>";
 					document.getElementById("apertureset").innerHTML=output;
 				});
 			}
@@ -418,7 +418,7 @@
 									</div>
 								</div>
                                 <div class="control-group">
-									<label class="control-label" for="apertureset">Aperture 0-100% Closed</label>
+									<label class="control-label" for="apertureset">Choke %</label>
 									<div class="controls">
 										<input type="text" name="apertureset" value="100" id="apertureset">
 									</div>
