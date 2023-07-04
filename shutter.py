@@ -3,6 +3,7 @@
 import RPi.GPIO as GPIO
 import time
 import sys
+import logging
 
 
 class shutter:
@@ -25,30 +26,32 @@ class shutter:
     def loop(self):
         while True:
             # rotate from 0 ~ 180 degrees
-            for dc in range(0, 181, 1):
-                self.servoWrite(dc)
+            for dc in range(0, 101, 20):
+                self.setAperture(dc)
                 time.sleep(0.01)
             time.sleep(0.5)
             # rotate from 180 ~ 0 degrees
-            for dc in range(180, -1, -1):
-                self.servoWrite(dc)
+            for dc in range(100, -1, -20):
+                self.setAperture(dc)
                 time.sleep(0.01)
             time.sleep(0.5)
 
     def setAperture(self, percent):
 
         angle = int(float(percent) * 0.01 * 180)
-        print(angle)
+        logging.info(f"setAperture angle {angle}")
+
 
         # Silently ignored if above some angle for some reason
         if angle > 170:
             angle = 170
-
+            
         self.servoWrite(angle)
         time.sleep(1)
-        self.pwmChannel.stop()
+        # self.pwmChannel.stop()
 
     def __init__(self):
+        logging.getLogger("control")
 
         self.ERROR_OFFSET = 0.5
         self.SERVO_MIN_DUTY = 2.5 + self.ERROR_OFFSET  # duty cycle for 0 degrees
@@ -72,10 +75,19 @@ class shutter:
 
 
 if __name__ == "__main__":
-    if not (len(sys.argv) == 2 and int(sys.argv[1]) >= 0 and int(sys.argv[1]) <= 100):
-        print("Must provide integer percent closed 0-100")
-        exit()
+    logging.getLogger("control")
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(levelname)s] %(message)s",
+        handlers=[
+            logging.FileHandler("/home/pi/Smoker-Controller/control.log"),
+            logging.StreamHandler()
+        ]
+    )
+    # if not (len(sys.argv) == 2 and int(sys.argv[1]) >= 0 and int(sys.argv[1]) <= 100):
+    #     print("Must provide integer percent closed 0-100")
+    #     exit()
 
     shutter = shutter()
-
-    shutter.setAperture(sys.argv[1])
+    shutter.loop()
+    # shutter.setAperture(sys.argv[1])

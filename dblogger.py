@@ -7,9 +7,10 @@ import math
 import sqlite3
 from influxdb import InfluxDBClient
 import thermistor
+import logging
 
 
-class logger:
+class dblogger:
     def log_temperature_sqlite(self, sensnum, temp):
 
         conn = sqlite3.connect("/home/pi/Smoker-Controller/templog.db")
@@ -36,16 +37,18 @@ class logger:
         self.client.write_points(data)
 
     def __init__(self):
+        logging.getLogger("control")
 
         self.therm = thermistor.thermistor()
 
-        self.DEBUG = 0
+        logging.info(f"InfluxDBClient localhost 8086 db tempcontroler")
 
         self.client = InfluxDBClient(host="localhost", port=8086)
         self.db_name = "tempcontroler"
         self.client.create_database(self.db_name)
         self.client.switch_database(self.db_name)
 
+    def log_temps(self):
         for sensor in range(0, 3):
             temp = self.therm.get_temp_deg_f(sensor)
             self.log_temperature_sqlite(sensor, int(temp))
@@ -53,4 +56,5 @@ class logger:
 
 
 if __name__ == "__main__":
-    logger()
+    lgr = logger()
+    lgr.log_temps()

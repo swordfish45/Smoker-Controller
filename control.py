@@ -7,6 +7,9 @@ import math
 import sqlite3
 import re
 import shutter
+import dblogger
+import logging
+import sys
 from influxdb import InfluxDBClient
 
 
@@ -16,8 +19,8 @@ class control:
         match = re.search('"apertureset":"(\d+)', str)
 
         choke = int(match.group(1))
-        if self.DEBUG == 1:
-            print(choke)
+
+        logging.info(f"readAperture choke {choke}")
 
         measurement = "choke"
         fields = {"value": choke}
@@ -48,8 +51,8 @@ class control:
 
     # Set PWM of fan output port based on current steady state and target temp F
     def setFan(self, temp, target):
-        if self.DEBUG == 1:
-            print(temp, target)
+
+        logging.info(f"setFan temp {temp},  target {target}")
 
         fan_enable = temp < target
 
@@ -65,7 +68,7 @@ class control:
         self.client.write_points(data)
 
     # Get steady state reading of the smokebox temp
-    def readTemp(self):
+    def contol_temps(self):
 
         conn = sqlite3.connect(self.path + "/templog.db")
         curs = conn.cursor()
@@ -73,23 +76,41 @@ class control:
             "SELECT max(timestamp), sensnum, temp FROM (SELECT * FROM temps WHERE sensnum = 0)"
         )
         temp = curs.fetchone()[2]
-        if self.DEBUG == 1:
-            print("db", temp)
+
+        logging.info(f"Latest smoke temp {temp}")
 
         conn.close()
         self.setFan(temp, self.readSetPoint())
         self.shutter.setAperture(self.readAperture())
 
     def testloop(self):
-        while True:
-            self.readTemp()
+        while(True):
+            self.contol_temps()
             GPIO.output(self.PWMPIN, True)
             time.sleep(1)
             GPIO.output(self.PWMPIN, False)
             time.sleep(1)
 
+    def main_loop(self):
+        while(True):
+            self.dblogger.log_temps()
+            self.contol_temps()
+            time.sleep(10)
+        # todo /home/pi/Smoker-Controller/dbcleanup.sh
+
     def __init__(self):
+        logging.getLogger("control")
+        logging.basicConfig(
+            level=logging.INFO,
+            format="%(asctime)s [%(levelname)s] %(message)s",
+            handlers=[
+                logging.FileHandler("/home/pi/Smoker-Controller/control.log"),
+                logging.StreamHandler()
+            ]
+)
+
         self.shutter = shutter.shutter()
+        self.dblogger = dblogger.dblogger()
 
         self.client = InfluxDBClient(host="localhost", port=8086)
         self.db_name = "tempcontroler"
@@ -106,10 +127,10 @@ class control:
 
         GPIO.setup(self.PWMPIN, GPIO.OUT)
         # testloop()
-        self.readTemp()
-        self.readAperture()
+
         # GPIO.cleanup()
 
 
 if __name__ == "__main__":
-    control()
+    contr = control()
+    contr.main_loop()

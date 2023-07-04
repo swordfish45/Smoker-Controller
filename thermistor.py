@@ -4,6 +4,7 @@ import datetime
 import os
 import RPi.GPIO as GPIO
 import math
+import logging
 
 
 class thermistor:
