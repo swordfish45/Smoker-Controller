@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import time
 import datetime
 import os
@@ -6,7 +6,7 @@ import RPi.GPIO as GPIO
 import math
 import sqlite3
 import re
-import set_shutter
+import shutter
 from influxdb import InfluxDBClient
 
 
@@ -18,7 +18,7 @@ class control:
 
         choke = int(match.group(1))
         if (self.DEBUG == 1):
-            print choke
+            print(choke)
             
         measurement = 'choke'
         fields = {'value': choke}
@@ -37,8 +37,8 @@ class control:
         return choke
 
     def readSetPoint(self):
-        str = open(self.path+'/web/formdata','r').read()
-        match = re.search('\"sensorset\":\"(\d+)',str)
+        setpt = open(self.path+'/web/formdata','r').read()
+        match = re.search('\"sensorset\":\"(\d+)',setpt)
         setpoint = int(match.group(1))
 
         measurement = 'setpoint'
@@ -60,7 +60,7 @@ class control:
     # Set PWM of fan output port based on current steady state and target temp F
     def setFan(self, temp, target):
         if (self.DEBUG == 1):
-            print temp, target
+            print(temp, target)
 
         fan_enable = temp < target
 
@@ -89,11 +89,11 @@ class control:
         curs.execute("SELECT max(timestamp), sensnum, temp FROM (SELECT * FROM temps WHERE sensnum = 0)")
         temp = curs.fetchone()[2]
         if (self.DEBUG == 1):
-            print "db", temp
+            print("db", temp)
 
         conn.close()
         self.setFan(temp,self.readSetPoint())
-        shutter.setAperture(self.readAperture())
+        self.shutter.setAperture(self.readAperture())
 
     def testloop(self):
         while True:
@@ -104,7 +104,7 @@ class control:
             time.sleep(1)
 
     def __init__(self):
-        self.shutter = shutter()
+        self.shutter = shutter.shutter()
 
         self.client = InfluxDBClient(host='localhost', port=8086)
         self.db_name = 'tempcontroler'

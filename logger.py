@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import time
 import datetime
 import os
@@ -11,7 +11,7 @@ class logger:
     # read SPI data from MCP3008 chip, 8 possible adc's (0 thru 7)
     def readadc(self, adcnum, clockpin, mosipin, misopin, cspin):
         if ((adcnum > 7) or (adcnum < 0)):
-                return -1
+            return -1
         GPIO.output(cspin, True)
 
         GPIO.output(clockpin, False)  # start clock low
@@ -136,20 +136,20 @@ class logger:
         GPIO.setup(SPICLK, GPIO.OUT)
         GPIO.setup(SPICS, GPIO.OUT)
 
-        for sensor in xrange(0,3):
+        for sensor in range(0,3):
             value = 0
             temp = 0 
             value = self.readadc(sensor, SPICLK, SPIMOSI, SPIMISO, SPICS)
             if value != 0:
                 temp = self.temp_calc(value)
                 if self.DEBUG:
-                    print "value:", value, sensor
+                    print("value:", value, sensor)
                 self.log_temperature_sqlite(sensor, int(temp))
                 self.log_temperature_influx(sensor, temp)
             #log temperature of 0 if sensor is not connected
             if value == 0:
                 if self.DEBUG:
-                    print "value:", value, sensor
+                    print("value:", value, sensor)
                 self.log_temperature_sqlite(sensor, int(0))
                 self.log_temperature_influx(sensor, 0)
 

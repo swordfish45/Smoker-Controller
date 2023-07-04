@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import time
 import re
 import datetime
@@ -27,8 +27,8 @@ def sendmail(fromaddr, toaddr, username, password, email_body, email_subject, sm
 		#print "email sent: %s" % fromaddr
 
 	except Exception as e:
-		print "Something went wrong when sending the email %s" % fromaddr
-		print e
+		print("Something went wrong when sending the email %s" % fromaddr)
+		print(e)
 
 def get_temperature (sensnum):
 	con=sqlite3.connect('/home/pi/Smoker-Controller/templog.db')
@@ -84,7 +84,7 @@ for sensor in xrange(0,3):
 			continue
 		#check high alerts
 		if re.search("high", alert) and int(SensTemp) > int(ConfigSectionMap("Config")[alert]):
-			print "High Threshold exceeded for %s" % alert
+			# print "High Threshold exceeded for %s" % alert
 			if int(holddown[count]) == int(ConfigSectionMap("Config")['alerthold']):
 				msg += 'Sensor ' + str(Sensnum) + ' has exceeded ' + str(ConfigSectionMap("Config")[alert]) + " degrees F\n"
 				#print "Reached holddown timer for %s\n" % (alert)
