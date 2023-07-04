@@ -80,7 +80,7 @@ class logger:
 
         return tempf
     
-    def log_temperature(self,sensnum,temp):
+    def log_temperature_sqlite(self,sensnum,temp):
 
         conn=sqlite3.connect('/home/pi/Smoker-Controller/templog.db')
         curs=conn.cursor()
@@ -144,13 +144,13 @@ class logger:
                 temp = self.temp_calc(value)
                 if self.DEBUG:
                     print "value:", value, sensor
-                self.log_temperature(sensor, int(temp))
+                self.log_temperature_sqlite(sensor, int(temp))
                 self.log_temperature_influx(sensor, temp)
             #log temperature of 0 if sensor is not connected
             if value == 0:
                 if self.DEBUG:
                     print "value:", value, sensor
-                self.log_temperature(sensor, int(0))
+                self.log_temperature_sqlite(sensor, int(0))
                 self.log_temperature_influx(sensor, 0)
 
 

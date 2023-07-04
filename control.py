@@ -93,7 +93,7 @@ class control:
 
         conn.close()
         self.setFan(temp,self.readSetPoint())
-        set_shutter.setAperture(self.readAperture())
+        shutter.setAperture(self.readAperture())
 
     def testloop(self):
         while True:
@@ -104,6 +104,8 @@ class control:
             time.sleep(1)
 
     def __init__(self):
+        self.shutter = shutter()
+
         self.client = InfluxDBClient(host='localhost', port=8086)
         self.db_name = 'tempcontroler'
         self.client.create_database(self.db_name)
