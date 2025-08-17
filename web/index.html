@@ -146,6 +146,22 @@
 				var run = getSetNow();
 			}, 60000);
 			});
+            
+            
+            function getAperture()
+			{
+				$.getJSON('./configs.json', function(data) {
+					var output="";
+					output+= "<br>Choke<br>" + data.apertureset  + "&#37; Closed<br><br>";
+					document.getElementById("apertureset").innerHTML=output;
+				});
+			}
+			$(document).ready(function () {
+				var run = getAperture();
+			setInterval(function() {
+				var run = getAperture();
+			}, 60000);
+			});
 			//disables fields that user should not be able to edit after enabling DHCP
 			function disableIP()
 			{
@@ -259,9 +275,16 @@
 		<!-- Real-time Temp Buttons -->
 		<div class="row">
 		<h4>
-				<div class="col-md-4 col-xs-4" id="sensor1temp" style="background-color: #7cb5ec; border-radius: 35px; text-align:center; font: arial; color: #ffffff;"></div>
-				<div class="col-md-4 col-xs-4" id="sensor2temp" style="background-color: #434348; border-radius: 40px; text-align:center; font: arial; color: #ffffff;"></div>
-				<div class="col-md-4 col-xs-4" id="sensorset" style="background-color: #90ed7d; border-radius: 40px; text-align:center; font: arial; color: #ffffff;"></div>
+				<div class="col-md-6 col-xs-6" id="sensor1temp" style="background-color: #7cb5ec; border-radius: 35px; text-align:center; font: arial; color: #ffffff;"></div>
+				<div class="col-md-6 col-xs-6" id="sensor2temp" style="background-color: #434348; border-radius: 40px; text-align:center; font: arial; color: #ffffff;"></div>
+		
+		</h4>
+		</div>
+        <div class="row">
+		<h4>
+				<div class="col-md-6 col-xs-6" id="sensorset" style="background-color: #90ed7d; border-radius: 40px; text-align:center; font: arial; color: #ffffff;"></div>
+                <div class="col-md-6 col-xs-6" id="apertureset" style="background-color: #c97900; border-radius: 40px; text-align:center; font: arial; color: #ffffff;"></div>
+
 		</h4>
 		</div>
 		<br>
@@ -294,86 +317,14 @@
 			  		<div class="modal-body">
 			  		<form class="form-horizontal well" action="#" method="POST">
 						<ul class="nav nav-tabs">
-							<li class="active"><a href="#tab1" data-toggle="tab">IP Settings</a></li>
-							<li><a href="#tab2" data-toggle="tab">Wireless Settings</a></li>
+							<li class="active">
+                            <li><a href="#tab5" data-toggle="tab">Control Settings</a></li>
 							<li><a href="#tab3" data-toggle="tab">Sensor Alerts</a></li>
 							<li><a href="#tab4" data-toggle="tab">Email Configuration</a></li>
-							<li><a href="#tab5" data-toggle="tab">Control Settings</a></li>
 						</ul>
 						<div class="tab-content">
-							<div class="tab-pane active" id="tab1">
-								<div class="control-group">
-									<label class="control-label" for="dhcp">DHCP</label>
-									<div class="controls">
-										<input type="checkbox" name="dhcp" id="dhcp" onclick="disableIP()">
-									</div>
-								</div>
-								<div class="control-group">
-									<label class="control-label" for="ip">IP Address</label>
-									<div class="controls">
-										<input type="text" name="ip" id="ip" placeholder="IP Address">
-									</div>
-								</div>
-								<div class="control-group">
-									<label class="control-label" for="netmask">Network Mask</label>
-									<div class="controls">
-										<input type="text" name="netmask" id="netmask" placeholder="Network Mask">
-									</div>
-								</div>
-								<div class="control-group">
-									<label class="control-label" for="gateway">Gateway</label>
-									<div class="controls">
-										<input type="text" name="gateway" id="gateway" placeholder="Gateway">
-									</div>
-								</div>
-								<div class="control-group">
-									<label class="control-label" for="dns1">DNS Server #1</label>
-									<div class="controls">
-										<input type="text" name="dns1" id="dns1" placeholder="DNS Server IP">
-									</div>
-								</div>
-								<div class="control-group">
-									<label class="control-label" for="dns2">DNS Server #2</label>
-									<div class="controls">
-										<input type="text" name="dns2" id="dns2" placeholder="DNS Server IP">
-									</div>
-								</div>
-								<div class="control-group">
-									<br><label class="control-label">* Saving changes on this tab will cause an automatic reboot</label>
-								</div>
-							</div>
-							<div class="tab-pane" id="tab2">
-								<div class="control-group">
-									<label class="control-label" for="adhoc">Ad-Hoc Enabled</label>
-									<div class="controls">
-										<input type="checkbox" name="adhoc" id="adhoc" placeholder="adhoc" onclick="disableWireless()">
-									</div>
-								</div>
-								<div class="control-group">
-									<label class="control-label" for="enctype">Encryption Type</label>
-									<div class="controls">
-										<select name="enctype" id ="enctype"">
-										<option value="WPA">WPA</option>
-										<option value="RSN">WPA2</option>
-										</select>
-									</div>
-								</div>
-								<div class="control-group">
-									<label class="control-label" for="ssid">SSID</label>
-									<div class="controls">
-										<input type="text" name="ssid" id="ssid" placeholder="SSID">
-									</div>
-								</div>
-								<div class="control-group">
-									<label class="control-label" for="psk">Pre-Shared Key</label>
-									<div class="controls">
-										<input type="password" name="psk" id="psk" placeholder="(8-63 characters)">
-									</div>
-								</div>
-								<div class="control-group">
-									<br><label class="control-label">* Saving changes on this tab will cause an automatic reboot</label>
-								</div>
-							</div>
+							
+							
 							<div class="tab-pane" id="tab3">
 								<div class="control-group">
 									<label class="control-label" for="email">Alert Email Address</label>
@@ -459,11 +410,17 @@
 									</div>
 								</div>
 							</div>		
-							<div class="tab-pane" id="tab5">
+							<div class="tab-pane active" id="tab5">
 								<div class="control-group">
 									<label class="control-label" for="sensorset">Temp Set F</label>
 									<div class="controls">
-										<input type="text" name="sensorset" id="sensorset">
+										<input type="text" name="sensorset" value="225" id="sensorset">
+									</div>
+								</div>
+                                <div class="control-group">
+									<label class="control-label" for="apertureset">Choke %</label>
+									<div class="controls">
+										<input type="text" name="apertureset" value="100" id="apertureset">
 									</div>
 								</div>
 						</div>	

@@ -1,2 +1,5 @@
 templog.db
 web/formdata
+node_modules/*
+*pyc
+package-lock.json

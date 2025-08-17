@@ -1,16 +1,14 @@
 [Unit]
-Description=Smoker Controller service
+Description=Smoker Controller Logging and Servo service
 After=network.target
 StartLimitIntervalSec=0
-
 [Service]
 Type=simple
 Restart=always
 RestartSec=1
-StandardOutput=inherit
-StandardError=inherit
 User=pi
-ExecStart=/home/pi/Smoker-Controller/start_thermserv.sh
+ExecStart=/home/pi/Smoker-Controller/control.py
+
 
 [Install]
 WantedBy=multi-user.target
